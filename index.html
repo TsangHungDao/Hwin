@@ -1,135 +1,595 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hwin 系统下载</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f5f5f5;
-            color: #333;
-        }
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-        header {
-            background-color: #0078d7;
-            color: white;
-            padding: 20px 0;
-            text-align: center;
-        }
-        .logo {
-            font-size: 24px;
-            font-weight: bold;
-        }
-        main {
-            padding: 40px 0;
-        }
-        .section-title {
-            text-align: center;
-            margin-bottom: 30px;
-            color: #2d2d2d;
-        }
-        .windows-version {
-            background: white;
-            border-radius: 8px;
-            padding: 25px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        .version-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-        .version-name {
-            font-size: 20px;
-            font-weight: bold;
-            color: #0078d7;
-        }
-        .version-info {
-            color: #666;
-            margin-bottom: 20px;
-        }
-        .download-btn {
-            background-color: #0078d7;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-            text-decoration: none;
-        }
-        .download-btn:hover {
-            background-color: #005a9e;
-        }
-        .requirements {
-            margin-top: 15px;
-            font-size: 14px;
-            color: #555;
-        }
-        footer {
-            text-align: center;
-            padding: 20px 0;
-            color: #777;
-            font-size: 14px;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hwin - 优化后的系统</title>
+  <!-- 引入Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- 引入Font Awesome -->
+  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <!-- 配置Tailwind自定义主题 -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#165DFF',
+            secondary: '#FF7D00',
+            dark: '#1D2939',
+            light: '#F9FAFB'
+          },
+          fontFamily: {
+            inter: ['Inter', 'system-ui', 'sans-serif'],
+          },
+        },
+      }
+    }
+  </script>
+  <!-- 自定义工具类 -->
+  <style type="text/tailwindcss">
+    @layer utilities {
+      .content-auto {
+        content-visibility: auto;
+      }
+      .text-shadow {
+        text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      }
+      .transition-custom {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+    }
+  </style>
+  <style>
+    /* 全局样式 */
+    html {
+      scroll-behavior: smooth;
+    }
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+    }
+    /* 动画效果 */
+    .fade-in {
+      animation: fadeIn 0.8s ease-in-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .hover-scale {
+      transition: transform 0.3s ease;
+    }
+    .hover-scale:hover {
+      transform: scale(1.03);
+    }
+    /* 导航栏滚动效果 */
+    .navbar-scrolled {
+      background-color: rgba(255, 255, 255, 0.98);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    }
+  </style>
 </head>
-<body>
-    <header>
-        <div class="container">
-            <div class="logo">Hwin 系统下载</div>
-        </div>
-    </header>
-    <center><h4>开发者：<a href="https://www.hungdao.cn/">HungDao</a> </h4></center>
-    <center><h4>注意：所有系统都是由官方版本修改裁剪后的孤版镜像无法直接安装，请使用PE镜像里的系统安装工具进行安装 ！</h4></center>
+<body class="bg-light text-dark">
+  <!-- 导航栏 -->
+  <header id="navbar" class="fixed w-full top-0 z-50 transition-custom bg-transparent">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center py-4">
+        <!-- Logo -->
+        <a href="#" class="flex items-center space-x-2">
+          <div class="w-10 h-10 rounded-lg bg-primary flex items-center justify-center">
+            <i class="fa fa-rocket text-white text-xl"></i>
+          </div>
+          <span class="text-xl font-bold text-primary">Hwin</span>
+        </a>
         
+        <!-- 桌面端导航 -->
+        <nav class="hidden md:flex items-center space-x-8">
+          <a href="#intro" class="font-medium hover:text-primary transition-custom">系统介绍</a>
+          <a href="#features" class="font-medium hover:text-primary transition-custom">优化详细</a>
+          <a href="#download" class="font-medium hover:text-primary transition-custom">系统下载</a>
+          <a href="#about" class="font-medium hover:text-primary transition-custom">关于作者</a>
+        </nav>
+        
+        <!-- 移动端菜单按钮 -->
+        <button id="menuBtn" class="md:hidden text-dark hover:text-primary transition-custom">
+          <i class="fa fa-bars text-2xl"></i>
+        </button>
+      </div>
+    </div>
+    
+    <!-- 移动端导航菜单 -->
+    <div id="mobileMenu" class="md:hidden hidden bg-white shadow-lg absolute w-full">
+      <div class="container mx-auto px-4 py-4 flex flex-col space-y-4">
+        <a href="#intro" class="font-medium py-2 hover:text-primary transition-custom">系统介绍</a>
+        <a href="#features" class="font-medium py-2 hover:text-primary transition-custom">优化详细</a>
+        <a href="#download" class="font-medium py-2 hover:text-primary transition-custom">系统下载</a>
+        <a href="#about" class="font-medium py-2 hover:text-primary transition-custom">关于作者</a>
+      </div>
+    </div>
+  </header>
 
-
-    <main>
-        <div class="container">
-            <div class="windows-version">
-                <div class="version-header">
-                    <div class="version-name">Windows 11 专业工作站版 - 25H2</div>
-                    <span>2025-10-09</span>
-                </div>
-                <div class="version-info">
-                    适用于现代设备的最新操作系统，具有全新界面和增强的安全功能。
-                </div>
-                <a href="https://s.hungdao.cn:5667/s/1e463f3d07cc48a5bd" class="download-btn">NAS下载</a>
-                <div class="requirements">
-                    <strong>系统要求：</strong> 4GB 内存，64GB 存储
-                </div>
+  <!-- 英雄区域 -->
+  <section class="pt-32 pb-20 md:pt-40 md:pb-28 bg-gradient-to-b from-white to-blue-50">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col md:flex-row items-center">
+        <div class="md:w-1/2 fade-in">
+          <h1 class="text-[clamp(2.5rem,5vw,4rem)] font-bold leading-tight text-dark mb-6">
+            精心优化后的<br><span class="text-primary">高效率省心系统</span>
+          </h1>
+          <p class="text-lg md:text-xl text-gray-600 mb-8 max-w-lg">
+            通过技术手段修改官网版本系统，自动设置优化系统功能，实现高效稳定优化后的系统。
+          </p>
+          <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+            <a href="#download" class="bg-secondary hover:bg-secondary/90 text-white font-semibold py-3 px-8 rounded-lg shadow-lg hover:shadow-xl transition-custom text-center">
+              <i class="fa fa-download mr-2"></i>立即下载
+            </a>
+            <a href="#features" class="bg-white hover:bg-gray-50 text-primary border border-primary font-semibold py-3 px-8 rounded-lg shadow-md hover:shadow-lg transition-custom text-center">
+              <i class="fa fa-info-circle mr-2"></i>了解更多
+            </a>
+          </div>
+          <div class="mt-10 flex items-center space-x-6">
+            <div class="flex -space-x-2">
             </div>
-
-            <div class="windows-version">
-                <div class="version-header">
-                    <div class="version-name">Windows 11 企业版 - 24H2</div>
-                    <span>2025-10-08</span>
-                </div>
-                <div class="version-info">
-                    适用于现代设备的办公操作系统，具有全新界面和稳定安全功能。
-                </div>
-                <a href="https://s.hungdao.cn:5667/s/b0f017188f3b4f5eac" class="download-btn">NAS下载</a>
-                <div class="requirements">
-                    <strong>系统要求：</strong> 4GB 内存，64GB 存储
-                </div>
+            <div>
+              <div class="flex items-center text-yellow-400 mb-1">
+              </div>
             </div>
+          </div>
         </div>
-    </main>
+        <div class="md:w-1/2 mt-12 md:mt-0 fade-in" style="animation-delay: 0.3s">
+          <div class="relative">
+            <img src="http://s.hungdao.cn:8093/i/2025/11/04/lysg3b.jpg" alt="Hwin 系统界面" class="rounded-2xl shadow-2xl hover-scale">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-    <footer>
-        <div class="container">
-            Hwin | <a href="https://www.hungdao.cn/">HungDao</a>
+  <!-- 软件介绍 -->
+  <section id="intro" class="py-20 bg-white">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16 fade-in">
+        <h2 class="text-[clamp(1.8rem,3vw,2.5rem)] font-bold text-dark mb-4">Hwin 简介</h2>
+        <p class="text-gray-600 max-w-2xl mx-auto text-lg">
+          通过修改官方原版系统，自动设置优化系统功能，实现高效稳定优化后的系统。
+        </p>
+      </div>
+      
+      <div class="grid md:grid-cols-3 gap-8">
+        <div class="bg-gray-50 rounded-xl p-8 shadow-md hover:shadow-xl transition-custom hover-scale">
+          <div class="w-14 h-14 rounded-lg bg-primary/10 flex items-center justify-center mb-6">
+            <i class="fa fa-tachometer text-primary text-2xl"></i>
+          </div>
+          <h3 class="text-xl font-bold mb-4">优化设置</h3>
+          <p class="text-gray-600">
+            修改系统设置，打开或关闭系统某些功能，让系统更稳定。
+          </p>
         </div>
-    </footer>
+        
+        <div class="bg-gray-50 rounded-xl p-8 shadow-md hover:shadow-xl transition-custom hover-scale">
+          <div class="w-14 h-14 rounded-lg bg-primary/10 flex items-center justify-center mb-6">
+            <i class="fa fa-shield text-primary text-2xl"></i>
+          </div>
+          <h3 class="text-xl font-bold mb-4">删增功能</h3>
+          <p class="text-gray-600">
+            编辑系统功能组件，删除无用系统功能增加实用功能，使用更高效。
+          </p>
+        </div>
+        
+        <div class="bg-gray-50 rounded-xl p-8 shadow-md hover:shadow-xl transition-custom hover-scale">
+          <div class="w-14 h-14 rounded-lg bg-primary/10 flex items-center justify-center mb-6">
+            <i class="fa fa-plug text-primary text-2xl"></i>
+          </div>
+          <h3 class="text-xl font-bold mb-4">无人值守</h3>
+          <p class="text-gray-600">
+            自动设置系统语言、输入法、账户、首次安装引导等，安装更省心。
+          </p>
+        </div>
+      </div>
+      
+      <div class="mt-16 bg-primary/5 rounded-2xl p-8 md:p-12 flex flex-col md:flex-row items-center">
+        <div class="md:w-2/3 mb-8 md:mb-0">
+          <h3 class="text-2xl font-bold mb-4">关于 Hwin</h3>
+          <p class="text-gray-600 mb-4">
+            Hwin 于 2023 年，由热爱技术与设计的"HungDao"打造。致力于通过技术创新，
+            为系统使用者提供简单、高效、稳定的系统方案。
+          </p>
+          <p class="text-gray-600">
+            后续将持续更新更多版本，尽请期待.....
+          </p>
+        </div>
+        <div class="md:w-1/3 flex justify-center md:justify-end">
+          <div class="w-48 h-48 rounded-full bg-primary/10 flex items-center justify-center">
+            <span class="text-4xl font-bold text-primary">Hwin</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 核心功能 -->
+  <section id="features" class="py-20 bg-gray-50">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16 fade-in">
+        <h2 class="text-[clamp(1.8rem,3vw,2.5rem)] font-bold text-dark mb-4">优化详细</h2>
+        <p class="text-gray-600 max-w-2xl mx-auto text-lg">
+          注意：所有版本都是修改后的孤版镜像，需要配合系统安装工具进行安装！
+        </p>
+      </div>
+      
+      <div class="grid md:grid-cols-2 gap-12">
+        <!-- 功能1 -->
+        <div class="flex flex-col md:flex-row items-start space-y-6 md:space-y-0 md:space-x-6">
+          <div class="w-16 h-16 rounded-xl bg-primary flex items-center justify-center flex-shrink-0">
+            <i class="fa fa-tasks text-white text-2xl"></i>
+          </div>
+          <div>
+            <h3 class="text-xl font-bold mb-3">项目管理</h3>
+            <p class="text-gray-600">
+              可视化项目进度，任务分配与跟踪，截止日期提醒，甘特图视图，让项目管理一目了然。
+            </p>
+          </div>
+        </div>
+        
+        <!-- 功能2 -->
+        <div class="flex flex-col md:flex-row items-start space-y-6 md:space-y-0 md:space-x-6">
+          <div class="w-16 h-16 rounded-xl bg-primary flex items-center justify-center flex-shrink-0">
+            <i class="fa fa-comments text-white text-2xl"></i>
+          </div>
+          <div>
+            <h3 class="text-xl font-bold mb-3">实时通讯</h3>
+            <p class="text-gray-600">
+              内置团队聊天功能，支持文字、语音、视频通话，文件快速分享，沟通零延迟。
+            </p>
+          </div>
+        </div>
+        
+        <!-- 功能3 -->
+        <div class="flex flex-col md:flex-row items-start space-y-6 md:space-y-0 md:space-x-6">
+          <div class="w-16 h-16 rounded-xl bg-primary flex items-center justify-center flex-shrink-0">
+            <i class="fa fa-cloud text-white text-2xl"></i>
+          </div>
+          <div>
+            <h3 class="text-xl font-bold mb-3">文件共享</h3>
+            <p class="text-gray-600">
+              大容量云存储，支持多种文件格式，版本控制，权限管理，安全高效的文件协作平台。
+            </p>
+          </div>
+        </div>
+        
+        <!-- 功能4 -->
+        <div class="flex flex-col md:flex-row items-start space-y-6 md:space-y-0 md:space-x-6">
+          <div class="w-16 h-16 rounded-xl bg-primary flex items-center justify-center flex-shrink-0">
+            <i class="fa fa-calendar text-white text-2xl"></i>
+          </div>
+          <div>
+            <h3 class="text-xl font-bold mb-3">日程安排</h3>
+            <p class="text-gray-600">
+              团队日历共享，会议预约，日程提醒，跨时区支持，让时间管理更高效。
+            </p>
+          </div>
+        </div>
+        
+        <!-- 功能5 -->
+        <div class="flex flex-col md:flex-row items-start space-y-6 md:space-y-0 md:space-x-6">
+          <div class="w-16 h-16 rounded-xl bg-primary flex items-center justify-center flex-shrink-0">
+            <i class="fa fa-bar-chart text-white text-2xl"></i>
+          </div>
+          <div>
+            <h3 class="text-xl font-bold mb-3">数据分析</h3>
+            <p class="text-gray-600">
+              团队绩效统计，项目进度分析，自定义报表，数据可视化，助力决策制定。
+            </p>
+          </div>
+        </div>
+        
+        <!-- 功能6 -->
+        <div class="flex flex-col md:flex-row items-start space-y-6 md:space-y-0 md:space-x-6">
+          <div class="w-16 h-16 rounded-xl bg-primary flex items-center justify-center flex-shrink-0">
+            <i class="fa fa-mobile text-white text-2xl"></i>
+          </div>
+          <div>
+            <h3 class="text-xl font-bold mb-3">多端同步</h3>
+            <p class="text-gray-600">
+              支持 Windows、Mac、iOS、Android 多平台，数据实时同步，随时随地办公协作。
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 下载区域 -->
+  <section id="download" class="py-20 bg-white">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16 fade-in">
+        <h2 class="text-[clamp(1.8rem,3vw,2.5rem)] font-bold text-dark mb-4">系统下载</h2>
+        <p class="text-gray-600 max-w-2xl mx-auto text-lg">
+          支持多渠道下载，无广告、无捆绑
+        </p>
+      </div>
+      
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        <!-- Windows 11 版本 -->
+        <div class="bg-gray-50 rounded-xl p-8 shadow-md hover:shadow-xl transition-custom hover-scale text-center">
+          <div class="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center mx-auto mb-6">
+            <i class="fa fa-windows text-blue-500 text-2xl"></i>
+          </div>
+          <h3 class="text-xl font-bold mb-2">Windows 11</h3>
+          <p class="text-gray-500 text-sm mb-6">2025-11-04</p>
+          <a href="https://s.hungdao.cn:5667/s/1e463f3d07cc48a5bd" class="inline-block bg-primary hover:bg-primary/90 text-white font-semibold py-3 px-6 rounded-lg shadow-md transition-custom">
+            <i class="fa fa-download mr-2"></i>下载
+          </a>
+        </div>
+
+        <!-- Windows 10 版本 -->
+        <div class="bg-gray-50 rounded-xl p-8 shadow-md hover:shadow-xl transition-custom hover-scale text-center">
+          <div class="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center mx-auto mb-6">
+            <i class="fa fa-windows text-blue-500 text-2xl"></i>
+          </div>
+          <h3 class="text-xl font-bold mb-2">Windows 10</h3>
+          <p class="text-gray-500 text-sm mb-6">2025-11-04</p>
+          <a href="#" class="inline-block bg-primary hover:bg-primary/90 text-white font-semibold py-3 px-6 rounded-lg shadow-md transition-custom">
+            <i class="fa fa-download mr-2"></i>下载
+          </a>
+        </div>
+
+        <!-- Windows 7 版本 -->
+        <div class="bg-gray-50 rounded-xl p-8 shadow-md hover:shadow-xl transition-custom hover-scale text-center">
+          <div class="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center mx-auto mb-6">
+            <i class="fa fa-windows text-blue-500 text-2xl"></i>
+          </div>
+          <h3 class="text-xl font-bold mb-2">Windows 7</h3>
+          <p class="text-gray-500 text-sm mb-6">2025-11-04</p>
+          <a href="#" class="inline-block bg-primary hover:bg-primary/90 text-white font-semibold py-3 px-6 rounded-lg shadow-md transition-custom">
+            <i class="fa fa-download mr-2"></i>下载
+          </a>
+        </div>
+
+        <!-- Windows XP 版本 -->
+        <div class="bg-gray-50 rounded-xl p-8 shadow-md hover:shadow-xl transition-custom hover-scale text-center">
+          <div class="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center mx-auto mb-6">
+            <i class="fa fa-windows text-blue-500 text-2xl"></i>
+          </div>
+          <h3 class="text-xl font-bold mb-2">Windows XP</h3>
+          <p class="text-gray-500 text-sm mb-6">2025-11-04</p>
+          <a href="#" class="inline-block bg-primary hover:bg-primary/90 text-white font-semibold py-3 px-6 rounded-lg shadow-md transition-custom">
+            <i class="fa fa-download mr-2"></i>下载
+          </a>
+        </div>
+    </div>
+  </section>
+
+  <!-- 关于我们 -->
+  <section id="about" class="py-20 bg-gray-50">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16 fade-in">
+        <h2 class="text-[clamp(1.8rem,3vw,2.5rem)] font-bold text-dark mb-4">关于作者</h2>
+        <p class="text-gray-600 max-w-2xl mx-auto text-lg">
+          一个热爱技术、追求卓越的开发者，致力于打造最好用的系统
+        </p>
+      </div>
+      
+      <div class="flex flex-col md:flex-row items-center">
+        <div class="md:w-1/2 mb-12 md:mb-0">
+          <img src="https://picsum.photos/800/600?random=30" alt="我们的团队" class="rounded-2xl shadow-xl hover-scale">
+        </div>
+        <div class="md:w-1/2 md:pl-12">
+          <h3 class="text-2xl font-bold mb-6">我们的故事</h3>
+          <p class="text-gray-600 mb-6">
+            TechFlow 团队成立于 2018 年，由一群来自知名科技公司的工程师和设计师组成。
+            我们发现，许多团队在协作过程中面临沟通低效、信息分散、流程繁琐等问题，
+            于是决定打造一款能够解决这些痛点的协作工具。
+          </p>
+          <p class="text-gray-600 mb-6">
+            经过多年的努力，我们的产品不断迭代优化，从最初的简单任务管理工具，
+            发展成为如今集项目管理、团队通讯、文件共享、数据分析于一体的全能协作平台。
+          </p>
+          <p class="text-gray-600 mb-8">
+            我们的使命是通过技术创新，让团队协作更简单、更高效，帮助企业释放创造力，
+            实现业务增长。
+          </p>
+          
+          <h4 class="text-xl font-bold mb-4">核心团队</h4>
+          <div class="grid grid-cols-3 gap-6">
+            <div class="text-center">
+              <img src="https://picsum.photos/200/200?random=40" alt="团队成员" class="w-24 h-24 rounded-full mx-auto mb-3">
+              <h5 class="font-bold">张明</h5>
+              <p class="text-sm text-gray-500">创始人 & CEO</p>
+            </div>
+            <div class="text-center">
+              <img src="https://picsum.photos/200/200?random=41" alt="团队成员" class="w-24 h-24 rounded-full mx-auto mb-3">
+              <h5 class="font-bold">李婷</h5>
+              <p class="text-sm text-gray-500">产品总监</p>
+            </div>
+            <div class="text-center">
+              <img src="https://picsum.photos/200/200?random=42" alt="团队成员" class="w-24 h-24 rounded-full mx-auto mb-3">
+              <h5 class="font-bold">王强</h5>
+              <p class="text-sm text-gray-500">技术负责人</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 联系我们 -->
+  <section class="py-20 bg-white">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="bg-primary rounded-2xl p-8 md:p-12 text-white">
+        <div class="flex flex-col md:flex-row items-center justify-between">
+          <div class="md:w-2/3 mb-8 md:mb-0">
+            <h2 class="text-2xl md:text-3xl font-bold mb-4">有任何问题？联系我们</h2>
+            <p class="text-blue-100 mb-6">
+              我们的客服团队将竭诚为您提供帮助，无论是产品咨询、技术支持还是合作洽谈
+            </p>
+            <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-6">
+              <a href="mailto:support@techflow.com" class="flex items-center space-x-2 text-white hover:text-blue-100 transition-custom">
+                <i class="fa fa-envelope text-xl"></i>
+                <span>support@techflow.com</span>
+              </a>
+              <a href="tel:+8610123456789" class="flex items-center space-x-2 text-white hover:text-blue-100 transition-custom">
+                <i class="fa fa-phone text-xl"></i>
+                <span>+86 (10) 1234-5678</span>
+              </a>
+            </div>
+          </div>
+          <div class="md:w-1/3 flex justify-center md:justify-end">
+            <a href="#" class="bg-white text-primary font-semibold py-3 px-8 rounded-lg shadow-lg hover:shadow-xl transition-custom">
+              <i class="fa fa-comments-o mr-2"></i>在线咨询
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 页脚 -->
+  <footer class="bg-dark text-white py-12">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div>
+          <div class="flex items-center space-x-2 mb-6">
+            <div class="w-10 h-10 rounded-lg bg-white flex items-center justify-center">
+              <i class="fa fa-rocket text-primary text-xl"></i>
+            </div>
+            <span class="text-xl font-bold text-white">TechFlow</span>
+          </div>
+          <p class="text-gray-400 mb-6">
+            让团队协作更高效，项目管理更简单
+          </p>
+          <div class="flex space-x-4">
+            <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-primary transition-custom">
+              <i class="fa fa-weixin"></i>
+            </a>
+            <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-primary transition-custom">
+              <i class="fa fa-weibo"></i>
+            </a>
+            <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-primary transition-custom">
+              <i class="fa fa-github"></i>
+            </a>
+            <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-primary transition-custom">
+              <i class="fa fa-linkedin"></i>
+            </a>
+          </div>
+        </div>
+        
+        <div>
+          <h4 class="text-lg font-bold mb-6">产品</h4>
+          <ul class="space-y-3">
+            <li><a href="#features" class="text-gray-400 hover:text-white transition-custom">功能介绍</a></li>
+            <li><a href="#download" class="text-gray-400 hover:text-white transition-custom">下载中心</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition-custom">价格方案</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition-custom">更新日志</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition-custom">帮助文档</a></li>
+          </ul>
+        </div>
+        
+        <div>
+          <h4 class="text-lg font-bold mb-6">公司</h4>
+          <ul class="space-y-3">
+            <li><a href="#about" class="text-gray-400 hover:text-white transition-custom">关于我们</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition-custom">招贤纳士</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition-custom">合作伙伴</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition-custom">新闻动态</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition-custom">联系我们</a></li>
+          </ul>
+        </div>
+        
+        <div>
+          <h4 class="text-lg font-bold mb-6">法律</h4>
+          <ul class="space-y-3">
+            <li><a href="#" class="text-gray-400 hover:text-white transition-custom">服务条款</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition-custom">隐私政策</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition-custom">Cookie 政策</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition-custom">知识产权</a></li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="border-t border-gray-800 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
+        <p class="text-gray-500 text-sm mb-4 md:mb-0">
+          &copy; 2025 TechFlow. 保留所有权利。
+        </p>
+        <div class="flex space-x-6">
+          <a href="#" class="text-gray-500 hover:text-gray-400 text-sm transition-custom">服务条款</a>
+          <a href="#" class="text-gray-500 hover:text-gray-400 text-sm transition-custom">隐私政策</a>
+          <a href="#" class="text-gray-500 hover:text-gray-400 text-sm transition-custom">Cookie 设置</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- 回到顶部按钮 -->
+  <button id="backToTop" class="fixed bottom-8 right-8 w-12 h-12 rounded-full bg-primary text-white shadow-lg flex items-center justify-center opacity-0 invisible transition-custom z-50">
+    <i class="fa fa-arrow-up"></i>
+  </button>
+
+  <!-- JavaScript -->
+  <script>
+    // 导航栏滚动效果
+    const navbar = document.getElementById('navbar');
+    const backToTop = document.getElementById('backToTop');
+    
+    window.addEventListener('scroll', function() {
+      if (window.scrollY > 50) {
+        navbar.classList.add('navbar-scrolled');
+        backToTop.classList.remove('opacity-0', 'invisible');
+        backToTop.classList.add('opacity-100', 'visible');
+      } else {
+        navbar.classList.remove('navbar-scrolled');
+        backToTop.classList.add('opacity-0', 'invisible');
+        backToTop.classList.remove('opacity-100', 'visible');
+      }
+    });
+    
+    // 移动端菜单切换
+    const menuBtn = document.getElementById('menuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    
+    menuBtn.addEventListener('click', function() {
+      mobileMenu.classList.toggle('hidden');
+      if (mobileMenu.classList.contains('hidden')) {
+        menuBtn.innerHTML = '<i class="fa fa-bars text-2xl"></i>';
+      } else {
+        menuBtn.innerHTML = '<i class="fa fa-times text-2xl"></i>';
+      }
+    });
+    
+    // 关闭移动端菜单（点击菜单项后）
+    const mobileMenuLinks = mobileMenu.querySelectorAll('a');
+    mobileMenuLinks.forEach(link => {
+      link.addEventListener('click', function() {
+        mobileMenu.classList.add('hidden');
+        menuBtn.innerHTML = '<i class="fa fa-bars text-2xl"></i>';
+      });
+    });
+    
+    // 回到顶部功能
+    backToTop.addEventListener('click', function() {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    });
+    
+    // 渐入动画
+    const fadeElements = document.querySelectorAll('.fade-in');
+    const fadeInObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = 1;
+          entry.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, { threshold: 0.1 });
+    
+    fadeElements.forEach(element => {
+      element.style.opacity = 0;
+      element.style.transform = 'translateY(20px)';
+      element.style.transition = 'opacity 0.8s ease-in-out, transform 0.8s ease-in-out';
+      fadeInObserver.observe(element);
+    });
+  </script>
 </body>
 </html>
